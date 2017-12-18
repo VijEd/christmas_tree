@@ -5,144 +5,84 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ved.ca.mytwitter.mappers.UserMapper">
-
     <resultMap id="UserMap" type="User">
-
         <result column="username" property="userName" />
-
         <result column="emailid" property="emailId" />
-
         <result column="userid" property="userId" />
-
-         <result column="enabled" property="enabled" />
-
+        <result column="enabled" property="enabled" />
     </resultMap>
 
     <resultMap id="UserFolloweMap" type="UserFollower">
-
         <result column="userid" property="userId" />
-
         <result column="followerid" property="followerId" />
-
     </resultMap>
 
      <resultMap id="MessageMap" type="Message">
-
         <result column="userid" property="userId" />
-
         <result column="content" property="content" />
-
         <result column="timestamp" property="timestamp" />
-
     </resultMap>
 
     <select id="findFollowers" resultMap="UserMap">
-
        select username, emailid from test_schema.users where userid in (select followerid from test_schema.follow_relation where userid =#{userid}) 
-
-      <!--  select username, emailid from test_schema.users where userid in  (select followerid from test_schema.follow_relation f ,test_schema.users  u where u.username=#{userid} and f.userid=u.userid) -->
-
     </select>
 
     <select id="findUsersFollowing" resultMap="UserMap">
-
- 		 <!-- select username, emailid from test_schema.users where  userid in (select f.userid from test_schema.follow_relation f ,test_schema.users  u where u.username=#{followerid}  and f.followerid=u.userid) -->
-
  		select username, emailid from test_schema.users where  userid in (select userid from  test_schema.follow_relation where followerid=#{followerid})
-
     </select>
 
      <select id="addFollower" resultMap="UserMap">
-
  		insert into test_schema.follow_relation (userid, followerid) values (#{userid},#{followerid})
-
     </select>
 
     <select id="findMessages" resultMap="MessageMap">
-
       <bind name="pattern" value="'%' + keyword + '%'" />
-
-     select  userid, content, timestamp
-
+        select  userid, content, timestamp
 		from  TEST_SCHEMA.MESSAGES 
-
-		where userid = #{userid} and content like #{pattern} union
-
+		where userid = #{userid} and content like #{pattern} 
+		union
 		select  userid, content, timestamp
-
 		from  TEST_SCHEMA.MESSAGES 
-
 		 where userid in (select userid from  test_schema.follow_relation where followerid=#{userid} and content like #{pattern}) 
-
 	   </select>
 
 	 <select id="findMessagesNoSearch" resultMap="MessageMap">
-
-     select  userid, content, timestamp
-
+	    select  userid, content, timestamp
 		from  TEST_SCHEMA.MESSAGES 
-
 		where userid = #{userid} union
-
 		select  userid, content, timestamp
-
 		from  TEST_SCHEMA.MESSAGES 
-
 		 where userid in (select userid from  test_schema.follow_relation where followerid=#{userid}) 
-
     </select>
 
      <select id="deleteFollower" resultMap="UserMap">
-
  		delete from test_schema.follow_relation where  userid = #{userid} and followerid = #{followerid}
-
     </select>
 
     <select id="getPopularUserWithFollowers" resultMap="UserFolloweMap">
-
         <!--  This query returns user name and email id of popular user along with his followers
-
         but order is not guaranteed , so not using this query -->
 
  		<!--   select username, emailid from test_schema.users where userid in (select followerid from test_schema.follow_relation where userid  in (select userid from (
-
 		select top 1 userid, count(followerid)
-
 		from TEST_SCHEMA.FOLLOW_RELATION
-
 		group by userid))) 
-
 		union
-
 		select username, emailid from test_schema.users where userid in (
-
 		select userid from (
-
 		select top 1 userid, count(followerid)
-
 		from TEST_SCHEMA.FOLLOW_RELATION
-
 		group by userid)) -->
 
 		select userid,followerid  from test_schema.follow_relation where userid  in (select userid from (
-
 		select top 1 userid, count(followerid)
-
 		from TEST_SCHEMA.FOLLOW_RELATION
-
 		group by userid)) 
-
     </select>
-
-    
 
     <select id="getUserIdByName" resultMap="UserMap">
-
     	   select userid from TEST_SCHEMA.users where lower(username) = lower(#{username})
-
     </select>
-
-    
 
 </mapper>
 
