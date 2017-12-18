@@ -17,22 +17,22 @@ Following are Http End Points to execute in postman
 
 
 1. Endpoints to get the list of followers of th user.
-http://localhost:8080/user/followers/{userid}
+Request Method : GET http://localhost:8080/user/followers/{userid}
 
 2. Endpoints to get the list of people the user is following.
-http://localhost:8080/user/followees/{userid}
+Request Method : GEThttp://localhost:8080/user/followees/{userid}
 
 3.  An endpoint to start following another user. 
-http://localhost:8080/user/add/{userid}/{followerid}
+Request Method : POST http://localhost:8080/user/add/{userid}/{followerid}
 
 4.An endpoint to unfollow another user. 
-  http://localhost:8080/user/unfollow/2/3
+  Request Method : DELETE http://localhost:8080/user/unfollow/{userid}/{followerid}
 
 5. An endpoint to read the message list for given user  Include messages they have sent and messages sent by users they     follow. Support a “search=” parameter that can be used to further filter messages based on keyword.
- http://localhost:8080/messages/1?search=test
+ Request Method : GET http://localhost:8080/messages/1?search=test
 
 6.An endpoint that returns a list ofall users, paired with their most "popular" follower. The more followers someone has, the more "popular" they are. Hint: this is possible to do with a single SQL query!
-http://localhost:8080/user/popularUserInfo
+Request Method : GET http://localhost:8080/user/popularUserInfo
 
 
 
